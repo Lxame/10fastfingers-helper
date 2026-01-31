@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "10FastFingers Helper",
+  "version": "1.0",
+  "description": "Автоматически вводит правильные слова на 10fastfingers.com",
+  "permissions": ["activeTab", "storage"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon.png",
+      "48": "icon.png",
+      "128": "icon.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://10fastfingers.com/*", "*://*.10fastfingers.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  }
+}

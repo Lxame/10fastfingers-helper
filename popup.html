@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body {
+            width: 300px;
+            padding: 15px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .container {
+            text-align: center;
+        }
+        
+        h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 18px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        .status {
+            font-size: 14px;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+        }
+        
+        .toggle-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .toggle-btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+        }
+        
+        .toggle-btn.off {
+            background: #f44336;
+        }
+        
+        .toggle-btn.off:hover {
+            background: #d32f2f;
+        }
+        
+        .info {
+            margin-top: 20px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.8);
+            line-height: 1.4;
+        }
+        
+        .stats {
+            margin-top: 15px;
+            font-size: 12px;
+            text-align: left;
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h3>10FastFingers Helper</h3>
+        
+        <div class="status" id="status">
+            <div>Статус: <span id="statusText">Загрузка...</span></div>
+            <div>Слов найдено: <span id="wordCount">0</span></div>
+        </div>
+        
+        <button class="toggle-btn" id="toggleBtn">ВКЛЮЧИТЬ</button>
+        
+        <div class="info">
+            <p><strong>Как использовать:</strong></p>
+            <p>1. Откройте 10fastfingers.com</p>
+            <p>2. Запустите тест печати</p>
+            <p>3. Нажмите кнопку выше</p>
+            <p>4. Начните печатать первую букву</p>
+            <p>Помощник продолжит за вас!</p>
+        </div>
+        
+        <div class="stats" id="stats">
+            <div>Скорость: <span id="speed">0</span> WPM</div>
+            <div>Точность: <span id="accuracy">100%</span></div>
+        </div>
+    </div>
+    
+    <script src="popup.js"></script>
+</body>
+</html>
