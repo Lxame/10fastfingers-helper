@@ -1,8 +1,6 @@
-// ============================================
-// 10FASTFINGERS ANTICHEAT
-// ============================================
-
-console.log('[FF] Античит активирован');
+// ===========================
+//   10FASTFINGERS ANTICHEAT
+// ===========================
 
 let isAnticheatEnabled = false;
 let startBtn = null;
@@ -15,7 +13,7 @@ const timeInterval = 10;
 function createAnticheatButton() {
     const anticheatButton = document.createElement('anticheat-button');
     anticheatButton.id = 'ff-anticheat-btn';
-    anticheatButton.textContent = isAnticheatEnabled ? 'ВЫКЛ' : 'ВКЛ';
+    anticheatButton.textContent = isAnticheatEnabled ? 'OFF' : 'ON';
     anticheatButton.style.cssText = `
         position: fixed;
         top: 10px;
@@ -23,26 +21,26 @@ function createAnticheatButton() {
         z-index: 999999;
         padding: 10px 15px;
         background: ${isAnticheatEnabled ? '#ff0000' : '#00ff00'};
+        opacity: 0.5;
         color: white;
         border: none;
         border-radius: 5px;
         font-size: 14px;
         font-weight: bold;
         cursor: pointer;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         font-family: Arial, sans-serif;
     `;
     
     anticheatButton.onclick = () => {
         isAnticheatEnabled = !isAnticheatEnabled;
-        anticheatButton.textContent = isAnticheatEnabled ? 'ВЫКЛ' : 'ВКЛ';
+        anticheatButton.textContent = isAnticheatEnabled ? 'OFF' : 'ON';
         anticheatButton.style.background = isAnticheatEnabled ? '#ff0000' : '#00ff00';
         
         if (isAnticheatEnabled) {
-            console.log('[FF] Античит включен');
+            console.log('[FF] Anticheat on');
             startAnticheat();
         } else {
-            console.log('[FF] Античит выключен');
+            console.log('[FF] Anticheat off');
             stopAnticheat();
         }
     };
@@ -70,12 +68,12 @@ function configureTextArea() {
     const originalBlur = textArea.onblur;
 
     textArea.onfocus = function(e) {
-        console.log('[FF] Поле ввода в фокусе');
+        console.log('[FF] Text area in focus');
         if (originalFocus) originalFocus.call(this, e);
     };
 
     textArea.onblur = function(e) {
-        console.log('[FF] Поле ввода потеряло фокус');
+        console.log('[FF] Text area loss focus');
         setTimeout(() => {
             if (isAnticheatEnabled && textArea) {
                 textArea.focus();
@@ -84,13 +82,13 @@ function configureTextArea() {
         if (originalBlur) originalBlur.call(this, e);
     };
 
-    // Основной обработчик ввода
+    // main input handler
     let lastKeyTime = 0;
     
     textArea.onkeydown = function(e) {
         if (!isAnticheatEnabled || anticheatWords.length === 0) return true;
         
-        // Защита от слишком быстрых нажатий
+        // typing delay
         const now = Date.now();
         if (now - lastKeyTime < timeInterval) {
             e.preventDefault();
@@ -99,14 +97,14 @@ function configureTextArea() {
         }
         lastKeyTime = now;
         
-        console.log(`[FF] Нажата клавиша: "${e.key}"`);
+        console.log(`[FF] Key pressed: "${e.key}"`);
         
-        // Блокируем
+        // block
         e.preventDefault();
         e.stopPropagation();
         e.stopImmediatePropagation();
         
-        // Backspace
+        // backspace
         if (e.key === 'Backspace') {
             this.value = this.value.slice(0, -1);
             if (currentCharIndex > 0) {
@@ -115,21 +113,19 @@ function configureTextArea() {
             return false;
         }
         
-        // Конец слов
+        // all words done
         if (currentWordIndex >= anticheatWords.length) {
-            console.log('[FF] Все слова введены');
+            console.log('[FF] All words are entered');
             return false;
         }
         
         const currentWord = anticheatWords[currentWordIndex];
-        console.log(`[FF] Слово: "${currentWord}"`);
-        console.log(`[FF] Индекс: "${currentWordIndex}"`);
+        console.log(`[FF] Current word: "${currentWord}"`);
         
-        // Если слово закончилось
+        // word end
         if (currentCharIndex >= currentWord.length) {
-            console.log(`[FF] Слово "${currentWord}" завершено`);
+            console.log(`[FF] Word "${currentWord}" are entered`);
             
-            // Создаем событие пробела
             const spaceEvent = new KeyboardEvent('keyup', {
                 key: ' ',
                 code: 'Space',
@@ -140,24 +136,23 @@ function configureTextArea() {
             this.value += ' ';
             this.dispatchEvent(spaceEvent);
             
-            // Переходим к следующему слову
+            // next word
             currentWordIndex++;
             currentCharIndex = 0;
 
             return false;
         }
         
-        // Игнорируем служебные клавиши
+        // ignoring the service keys
         if (e.key.length > 1) return false;
         
-        // Вводим правильную букву
+        // entering the correct letter
         const correctChar = currentWord[currentCharIndex];
-        console.log(`[FF] Вводим: "${correctChar}"`);
+        console.log(`[FF] Append: "${correctChar}"`);
         
-        // Добавляем букву
+        // append letter
         this.value += correctChar;
         
-        // Создаем событие для буквы
         const charEvent = new KeyboardEvent('keyup', {
             key: correctChar,
             code: `Key${correctChar.toUpperCase()}`,
@@ -167,21 +162,19 @@ function configureTextArea() {
         
         this.dispatchEvent(charEvent);
         
-        // Увеличиваем счетчик
         currentCharIndex++;
         
         return false;
     };
     
-    console.log('[FF] Настройка поля ввода завершена');
+    console.log('[FF] Text area configuring is completed');
 }
 
 function configureStartButton(){
     startBtn.onclick = function(e) {
         const img = imgDiv.querySelector('img');
         if (img) {
-            console.log('[FF] Изображение получено');
-            console.log(`[FF] Image src: "${img.src}"`);
+            console.log(`[FF] Image extracted, src: "${img.src}"`);
 
             chrome.runtime.sendMessage(
                 {
@@ -196,17 +189,17 @@ function configureStartButton(){
             let filename = now.toISOString()
             .replace(/[:.]/g, '-')
             .replace('T', '_')
-            .slice(0, 19); // "2024-02-19_11-30-45"
+            .slice(0, 19); // "yyyy-mm-dd_hh-mm-ss"
             filename += ".png";
 
-            saveImgFromElement(img, filename);
+            handleImgElement(img, filename);
         }
         else {
-            console.log('[FF::Error] Не удалось получить изображение');
+            console.error('[FF] Failed to get image');
         }
     }
 
-    console.log('[FF] Настройка кнопки "Start" завершена');
+    console.log('[FF] "Start" button configuring is completed');
 }
 
 function resetParams() {
@@ -230,22 +223,22 @@ function resetParams() {
 }
 
 function startAnticheat() {
-    console.log('[FF::Info] Запуск античита...');
+    console.log('[FF] Start anticheat...');
 
     resetParams();
 
     if (!findStartButton()) {
-        console.log('[FF::Error] Не удалось получить кнопку "Старт"');
+        console.error('[FF] Failed to get "Start" button');
         return;
     }
 
     if (!findTextArea()) {
-        console.log('[FF::Error] Не удалось получить поле ввода');
+        console.error('[FF] Failed to get text area');
         return;
     }
 
     if (!findImageDiv()) {
-        console.log('[FF::Error] Не удалось получить imgDiv');
+        console.error('[FF] Failed to get imgDiv');
         return;
     }
 
@@ -255,12 +248,12 @@ function startAnticheat() {
 
 function stopAnticheat()
 {
-    console.log('[FF] Остановка античита');
+    console.log('[FF] Anticheat stoped');
     resetParams();
 }
 
 function init() {
-    console.log('[FF] Инициализация античита');
+    console.log('[FF] Anticheat initialization');
     createAnticheatButton();
 }
 
@@ -270,11 +263,7 @@ if (document.readyState === 'loading') {
     init();
 }
 
-async function saveImgFromElement(img, filename = 'image.png') {
-    if (!img.complete) {
-        await new Promise(r => img.onload = r);
-    }
-
+async function handleImgElement(img, filename = 'image.png') {
     const canvas = document.createElement('canvas');
     canvas.width = img.naturalWidth;
     canvas.height = img.naturalHeight;
@@ -286,17 +275,17 @@ async function saveImgFromElement(img, filename = 'image.png') {
 
     chrome.runtime.sendMessage(
         {
-            type: 'DOWNLOAD_IMAGE',
+            type: 'DOWNLOAD_AND_RECOGNIZE_IMAGE',
             dataUrl: dataUrl,
             filename: filename
         },
         response => {
             anticheatWords = response.response.text
                 .toLowerCase()
-                .replace(/[^\p{L}\p{N}\s]+/gu, '') // только буквы и цифры
+                .replace(/[^a-zA-Zа-яА-ЯёЁ]/g, '') // only letters
                 .trim()
                 .split(/\s+/);
-            console.log(anticheatWords);
+            console.log(`[FF] Anticheat words: ${anticheatWords}`);
         }
     );
 }

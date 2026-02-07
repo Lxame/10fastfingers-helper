@@ -13,7 +13,7 @@ export async function recognizeFromFile(filename) {
         await worker.terminate();
         return text;
     } catch (error) {
-        console.error('Ошибка OCR:', error);
+        console.error(`[HOST] OCR eroor: ${error}`);
         return null;
     }
 }

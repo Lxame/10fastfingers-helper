@@ -5,28 +5,21 @@ import cors from 'cors';
 const app = express();
 const PORT = 3000;
 
-// разрешаем запросы откуда угодно (для расширений это ок)
+// allow requests from anywhere
 app.use(cors());
 
-// парсим JSON
+// parse JSON
 app.use(express.json());
 
-// тестовый endpoint
+// test endpoint
 app.get('/ping', (req, res) => {
-    console.log('Получен тестовый запрос');
-    res.json({ ok: true });
-});
-
-// основной обработчик
-app.post('/ocr', (req, res) => {
-    const imgUrl = req.body.imgUrl;
-    console.log(`Получен запрос обработку изображения: ${imgUrl}`);
+    console.log('[HOST] Getting test request');
     res.json({ ok: true });
 });
 
 app.post('/ocr_file', (req, res) => {
     const filename = req.body.filename;
-    console.log(`Получен запрос обработку изображения: ${filename}`);
+    console.log(`[HOST] Request to recognize image: ${filename}`);
     
     const text = recognizeFromFile(filename)
         .then(text => {
@@ -46,5 +39,5 @@ app.post('/ocr_file', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
+    console.log(`[HOST] Server running at http://localhost:${PORT}`);
 });
