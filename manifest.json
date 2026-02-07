@@ -3,7 +3,11 @@
   "name": "10FastFingers Helper",
   "version": "1.0",
   "description": "Автоматически вводит правильные слова на 10fastfingers.com",
-  "permissions": ["activeTab", "storage"],
+  "permissions": [
+    "activeTab", 
+    "storage",
+    "downloads"
+  ],
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
@@ -12,13 +16,30 @@
       "128": "icon.png"
     }
   },
+  "host_permissions": [
+    "http://localhost/*",
+    "http://127.0.0.1/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
   "content_scripts": [
     {
-      "matches": ["*://10fastfingers.com/*", "*://*.10fastfingers.com/*"],
+      "matches": ["*://10fastfingers.com/typing-test/*"],
       "js": ["content.js"],
+      "run_at": "document_end"
+    },
+    {
+      "matches": ["*://10fastfingers.com/anticheat/*"],
+      "js": ["anticheat.js"],
       "run_at": "document_end"
     }
   ],
+  "web_accessible_resources": [{
+    "resources": ["tesseract/*"],
+    "matches": ["<all_urls>"]
+  }],
   "icons": {
     "16": "icon.png",
     "48": "icon.png",

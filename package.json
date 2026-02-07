@@ -1,0 +1,14 @@
+{
+  "name": "typing-assistant",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "packageManager": "yarn@4.11.0",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "tesseract.js": "^7.0.0"
+  }
+}
