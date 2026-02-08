@@ -1,15 +1,14 @@
-// ===========================
+//======================================================================
 //   10FASTFINGERS ANTICHEAT
-// ===========================
-
+//======================================================================
 let isAnticheatEnabled = false;
 let startBtn = null;
 let textArea = null;
 let imgDiv = null;
 let anticheatWords = [];
-
+//======================================================================
 const timeInterval = 10; 
-
+//======================================================================
 function createAnticheatButton() {
     const anticheatButton = document.createElement('anticheat-button');
     anticheatButton.id = 'ff-anticheat-btn';
@@ -47,7 +46,7 @@ function createAnticheatButton() {
     
     document.body.appendChild(anticheatButton);
 }
-
+//======================================================================
 function findStartButton() {
     startBtn = document.getElementById('start-btn');
     return startBtn !== null;
@@ -62,7 +61,7 @@ function findImageDiv() {
     imgDiv = document.getElementById('word-img');
     return imgDiv !== null;
 }
-
+//======================================================================
 function configureTextArea() {
     const originalFocus = textArea.onfocus;
     const originalBlur = textArea.onblur;
@@ -192,6 +191,7 @@ function configureStartButton(){
             .slice(0, 19); // "yyyy-mm-dd_hh-mm-ss"
             filename += ".png";
 
+            console.log(`[FF] Filename "${filename}"`);
             handleImgElement(img, filename);
         }
         else {
@@ -201,7 +201,38 @@ function configureStartButton(){
 
     console.log('[FF] "Start" button configuring is completed');
 }
+//======================================================================
+async function handleImgElement(img, filename = 'image.png') {
+    if (!img.complete) {
+        await new Promise(r => img.onload = r);
+    }
 
+    const canvas = document.createElement('canvas');
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+
+    const dataUrl = canvas.toDataURL('image/png');
+
+    chrome.runtime.sendMessage(
+        {
+            type: 'DOWNLOAD_AND_RECOGNIZE_IMAGE',
+            dataUrl: dataUrl,
+            filename: filename
+        },
+        response => {
+            anticheatWords = response.response.text
+                .toLowerCase()
+                .replace(/[^a-zA-Zа-яА-ЯёЁ\s]/g, '') // only letters
+                .trim()
+                .split(/\s+/);
+            console.log(`[FF] Anticheat words: ${anticheatWords}`);
+        }
+    );
+}
+//======================================================================
 function resetParams() {
     currentWordIndex = 0;
     currentCharIndex = 0;
@@ -244,6 +275,8 @@ function startAnticheat() {
 
     configureTextArea();
     configureStartButton();
+
+    console.log('[FF] Anticheat ready to use!');
 }
 
 function stopAnticheat()
@@ -251,7 +284,7 @@ function stopAnticheat()
     console.log('[FF] Anticheat stoped');
     resetParams();
 }
-
+//======================================================================
 function init() {
     console.log('[FF] Anticheat initialization');
     createAnticheatButton();
@@ -262,30 +295,4 @@ if (document.readyState === 'loading') {
 } else {
     init();
 }
-
-async function handleImgElement(img, filename = 'image.png') {
-    const canvas = document.createElement('canvas');
-    canvas.width = img.naturalWidth;
-    canvas.height = img.naturalHeight;
-
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(img, 0, 0);
-
-    const dataUrl = canvas.toDataURL('image/png');
-
-    chrome.runtime.sendMessage(
-        {
-            type: 'DOWNLOAD_AND_RECOGNIZE_IMAGE',
-            dataUrl: dataUrl,
-            filename: filename
-        },
-        response => {
-            anticheatWords = response.response.text
-                .toLowerCase()
-                .replace(/[^a-zA-Zа-яА-ЯёЁ]/g, '') // only letters
-                .trim()
-                .split(/\s+/);
-            console.log(`[FF] Anticheat words: ${anticheatWords}`);
-        }
-    );
-}
+//======================================================================
