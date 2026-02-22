@@ -8,46 +8,22 @@ let words = [];
 let currentWordIndex = 0;
 let currentCharIndex = 0;
 let inputField = null;
+let reloadBtn = null;
 //======================================================================
 const timeInterval = 10;
 //======================================================================
-function createControlButton() {
-    const button = document.createElement('button');
-    button.id = 'ff-helper-btn';
-    button.textContent = enabled ? 'OFF' : 'ON';
-    button.style.cssText = `
-        position: fixed;
-        top: 10px;
-        right: 10px;
-        z-index: 999999;
-        padding: 10px 15px;
-        background: ${enabled ? '#ff0000' : '#00ff00'};
-        opacity: 0.5;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        font-size: 14px;
-        font-weight: bold;
-        cursor: pointer;
-        font-family: Arial, sans-serif;
-    `;
-    
-    button.onclick = () => {
-        enabled = !enabled;
-        button.textContent = enabled ? 'OFF' : 'ON';
-        button.style.background = enabled ? '#ff0000' : '#00ff00';
-        
-        if (enabled) {
-            console.log('[FF] On');
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.action === "commonSwitchChanged") {
+        enabled = message.enabled;
+        if (message.enabled) {
+            console.log('[FF] Helper On');
             startHelper();
         } else {
-            console.log('[FF] Off');
+            console.log('[FF] Helper Off');
             stopHelper();
         }
-    };
-    
-    document.body.appendChild(button);
-}
+    }
+});
 //======================================================================
 function getWords() {
     try {
@@ -71,6 +47,11 @@ function getWords() {
 function findInputField() {
     inputField = document.getElementById('inputfield');
     return inputField !== null;
+}
+
+function findReloadButton() {
+    reloadBtn = document.getElementById('reload-btn');
+    return reloadBtn !== null;
 }
 //======================================================================
 function configureInputField() {
@@ -181,29 +162,44 @@ function configureInputField() {
         
         return false;
     };
+}
 
-    console.log('[FF] Input field configuring is completed');
+function configureReloadButton() {
+    reloadBtn.onclick = function() {
+        console.log('[FF] Reload button clicked');
+        setTimeout(() => {
+            resetParams();
+            getWords();
+        }, 500);
+    }
 }
 //======================================================================
-function resetParams(){
+function resetParams() {
     currentWordIndex = 0;
     currentCharIndex = 0;
     words = [];
+}
 
+function resetControls() {
     if (inputField) {
         inputField.onkeydown = null;
         inputField.onkeyup = null;
         inputField.onfocus = null;
         inputField.onblur = null;
+        inputField = null;
     }
 
-    inputField = null;
+    if (reloadBtn) {
+        reloadBtn.onclick = null;
+        reloadBtn = null;
+    }
 }
 
 function startHelper() {
     console.log('[FF] Helper is starting...');
     
     resetParams();
+    resetControls();
     getWords();
     
     if (!findInputField()) {
@@ -211,7 +207,13 @@ function startHelper() {
         return;
     }
 
+    if (!findReloadButton()) {
+        console.error('[FF] Failed to get reload button');
+        return;
+    }
+
     configureInputField();
+    configureReloadButton();
     
     console.log('[FF] Helper ready to use!');
 }
@@ -222,8 +224,7 @@ function stopHelper() {
 }
 //======================================================================
 function init() {
-    console.log('[FF] Init extension');
-    createControlButton();
+    console.log('[FF] Extension initialized');
 }
 
 if (document.readyState === 'loading') {

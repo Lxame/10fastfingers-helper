@@ -9,43 +9,18 @@ let anticheatWords = [];
 //======================================================================
 const timeInterval = 10; 
 //======================================================================
-function createAnticheatButton() {
-    const anticheatButton = document.createElement('anticheat-button');
-    anticheatButton.id = 'ff-anticheat-btn';
-    anticheatButton.textContent = isAnticheatEnabled ? 'OFF' : 'ON';
-    anticheatButton.style.cssText = `
-        position: fixed;
-        top: 10px;
-        right: 10px;
-        z-index: 999999;
-        padding: 10px 15px;
-        background: ${isAnticheatEnabled ? '#ff0000' : '#00ff00'};
-        opacity: 0.5;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        font-size: 14px;
-        font-weight: bold;
-        cursor: pointer;
-        font-family: Arial, sans-serif;
-    `;
-    
-    anticheatButton.onclick = () => {
-        isAnticheatEnabled = !isAnticheatEnabled;
-        anticheatButton.textContent = isAnticheatEnabled ? 'OFF' : 'ON';
-        anticheatButton.style.background = isAnticheatEnabled ? '#ff0000' : '#00ff00';
-        
-        if (isAnticheatEnabled) {
-            console.log('[FF] Anticheat on');
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.action === "anticheatSwitchChanged") {
+        isAnticheatEnabled = message.enabled;
+        if (message.enabled) {
+            console.log('[FF] Anticheat On');
             startAnticheat();
         } else {
-            console.log('[FF] Anticheat off');
+            console.log('[FF] Anticheat Off');
             stopAnticheat();
         }
-    };
-    
-    document.body.appendChild(anticheatButton);
-}
+    }
+});
 //======================================================================
 function findStartButton() {
     startBtn = document.getElementById('start-btn');
@@ -286,8 +261,7 @@ function stopAnticheat()
 }
 //======================================================================
 function init() {
-    console.log('[FF] Anticheat initialization');
-    createAnticheatButton();
+    console.log('[FF] Anticheat initialized');
 }
 
 if (document.readyState === 'loading') {
