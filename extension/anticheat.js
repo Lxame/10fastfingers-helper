@@ -7,7 +7,7 @@ let textArea = null;
 let imgDiv = null;
 let anticheatWords = [];
 //======================================================================
-const timeInterval = 10; 
+const timeInterval = 10;
 //======================================================================
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === "anticheatSwitchChanged") {
@@ -161,9 +161,9 @@ function configureStartButton(){
             
             const now = new Date();
             let filename = now.toISOString()
-            .replace(/[:.]/g, '-')
-            .replace('T', '_')
-            .slice(0, 19); // "yyyy-mm-dd_hh-mm-ss"
+                .replace(/[:.]/g, '-')
+                .replace('T', '_')
+                .slice(0, 19); // "yyyy-mm-dd_hh-mm-ss"
             filename += ".png";
 
             console.log(`[FF] Filename "${filename}"`);

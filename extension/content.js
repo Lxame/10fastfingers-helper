@@ -30,7 +30,9 @@ function getWords() {
         const wordSpans = document.querySelectorAll('#words span');
         for (const span of wordSpans) {
             const text = span.textContent.trim();
-            if (text) words.push(text);
+            if (text) {
+                words.push(text);
+            }
         }
         
         if (words.length === 0) {
@@ -65,7 +67,10 @@ function configureInputField() {
 
     inputField.onfocus = function(e) {
         console.log('[FF] Input field in focus');
-        if (originalFocus) originalFocus.call(this, e);
+
+        if (originalFocus) {
+            originalFocus.call(this, e);
+        }
     };
     
     inputField.onblur = function(e) {
@@ -75,14 +80,19 @@ function configureInputField() {
                 inputField.focus();
             }
         }, 10);
-        if (originalBlur) originalBlur.call(this, e);
+
+        if (originalBlur) {
+            originalBlur.call(this, e);
+        }
     };
 
     // main input handler
     let lastKeyTime = 0;
     
     inputField.onkeydown = function(e) {
-        if (!enabled || words.length === 0) return true;
+        if (!enabled || words.length === 0) {
+            return true;
+        }
         
         // typing delay
         const now = Date.now();
