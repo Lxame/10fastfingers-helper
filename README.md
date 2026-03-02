@@ -1,12 +1,16 @@
 # 🚀 10FastFingers Helper
 Chrome browser extension for **10fastfingers.com** that helps you type only correct words during typing tests.
 > ⚠️ For educational purposes only.
+
 ---
+
 ## ✨ Features
-* Highlights correct words
+* Emulates clicks
 * Helps avoid typos
 * Optional anti-cheat bypass via local host script
+
 ---
+
 ## 📦 Installation (Default Usage)
 ### 1️⃣ Clone the repository
 ```bash
@@ -21,8 +25,10 @@ cd 10fastfingers-helper
 ```
 ./typing-assistant/extension
 ```
-Done ✅
+Done! Visit *10fastfingers.com*. You can enter any key, but result will be always correct. 
+
 ---
+
 ## 🛠 Anti-Cheat Mode (Advanced)
 The anti-cheat bypass requires **Node.js** and **Yarn**.
 ### Requirements
@@ -33,7 +39,9 @@ Check versions:
 node -v
 yarn -v
 ```
+
 ---
+
 ### Setup
 Follow default installation steps first.
 Then:
@@ -57,31 +65,41 @@ Example (Mac/Linux):
 ```js
 downloadDir = "/Users/john/Downloads"
 ```
+
 ---
+
 ### 2️⃣ Install dependencies
 ```bash
 yarn install
 ```
+
 ---
+
 ### 3️⃣ Start host script
 ```bash
 yarn start
 ```
 The anti-cheat mode should now be active.
+
 ---
+
 ## 📁 Project Structure
 ```
 typing-assistant/
   ├── extension/    # Chrome extension files
   └── host/         # Local host script (anti-cheat mode)
 ```
+
 ---
+
 ## ⚠️ Important Notes
 * Works only in **Google Chrome**
 * Requires **Developer Mode**
 * Anti-cheat mode requires local Node.js server running
 * Tested on latest Chrome version
+
 ---
+
 ## 🧠 Troubleshooting
 If the extension does not load:
 * Make sure you selected the correct folder
@@ -92,4 +110,3 @@ If Yarn fails:
 rm -rf node_modules yarn.lock
 yarn
 ```
----
